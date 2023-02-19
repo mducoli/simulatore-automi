@@ -1,0 +1,35 @@
+{
+	"name": "vite-template-solid",
+	"version": "0.0.0",
+	"description": "",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"serve": "vite preview",
+		"format": "prettier --plugin-search-dir . --write ."
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"@types/btoa": "^1.2.3",
+		"@types/d3-graphviz": "^2.6.7",
+		"autoprefixer": "^10.4.13",
+		"postcss": "^8.4.21",
+		"tailwindcss": "^3.2.4",
+		"typescript": "^4.9.5",
+		"vite": "^4.1.1",
+		"vite-plugin-solid": "^2.5.0"
+	},
+	"dependencies": {
+		"@fortawesome/free-solid-svg-icons": "^6.3.0",
+		"@hpcc-js/wasm": "^2.8.0",
+		"buffer": "^6.0.3",
+		"colortranslator": "^1.10.2",
+		"d3": "^7.8.2",
+		"d3-graphviz": "^5.0.2",
+		"daisyui": "^2.50.1",
+		"map2": "^1.1.2",
+		"prettier-plugin-tailwindcss": "^0.2.3",
+		"solid-fa": "^0.1.0",
+		"solid-js": "^1.6.10"
+	}
+}
