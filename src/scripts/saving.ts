@@ -14,7 +14,7 @@ export function save(code: string, s0: string, sf: string) {
 export function load(code?: Setter<string>, s0?: Setter<string>, sf?: Setter<string>) {
 	try {
 		const json = JSON.parse(Buffer.from(window.location.hash, 'base64').toString());
-		if (!json.code || !json.s0 || !json.sf) {
+		if (json.code == undefined || json.s0 == undefined || json.sf == undefined) {
 			console.error('Error loading data');
 			return null;
 		}

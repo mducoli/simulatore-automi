@@ -9,13 +9,31 @@ const P: Component<{ onChange: (v: ProgramManager) => any; setWarn: Setter<strin
 	const [s0, setS0] = createSignal('');
 	const [sf, setSf] = createSignal('');
 
+	let textarea;
+
 	if (load()) {
 		const l = load();
 		setCode(l.code);
 		setS0(l.s0);
 		setSf(l.sf);
 		console.log('FIRST LOAD');
+
+		// idk why but onMount does't fire for some reason so i used a timeout
+		setTimeout(() => {
+			onInput();
+		}, 100);
 	}
+
+	const onInput = () => {
+		setCode(textarea.value);
+		const pgm = new ProgramManager(textarea.value as string, s0, sf);
+		props.onChange(pgm);
+		if (pgm.errors.length > 0) {
+			props.setWarn('Error parsing line(s) ' + pgm.errors.join(' '));
+		} else {
+			props.setWarn('');
+		}
+	};
 
 	return (
 		<div class="form-control flex-grow">
@@ -23,19 +41,11 @@ const P: Component<{ onChange: (v: ProgramManager) => any; setWarn: Setter<strin
 				<span class="label-text">Programma</span>
 			</label>
 			<textarea
+				ref={textarea}
 				class="textarea-bordered textarea h-96 w-full"
 				placeholder="S0 1 -> S1 F"
 				disabled={new URLSearchParams(window.location.search).has('disabled')}
-				onInput={(e) => {
-					setCode((e.target as any).value);
-					const pgm = new ProgramManager((e.target as any).value as string, s0, sf);
-					props.onChange(pgm);
-					if (pgm.errors.length > 0) {
-						props.setWarn('Error parsing line(s) ' + pgm.errors.join(' '));
-					} else {
-						props.setWarn('');
-					}
-				}}
+				onInput={onInput}
 				value={code()}
 			></textarea>
 			<div class="flex w-full gap-3">
@@ -119,7 +129,11 @@ export class ProgramManager {
 	}
 
 	getGraphData(): string {
-		let res = `node [shape = doublecircle]; "${this.sf()}";\nnode [shape = circle];\n`;
+		let res = '';
+		if (this.sf() && this.sf() != '') {
+			res += `node [shape = doublecircle]; "${this.sf()}";\n`;
+		}
+		res += 'node [shape = circle];\n';
 		for (const [S1, i, [S2, o]] of this.code.entries()) {
 			res += `"${S1}" -> "${S2}" [label = "${i}/${o}"];\n`;
 		}

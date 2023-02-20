@@ -4,7 +4,7 @@ import Output from './components/Output';
 import Graph from './components/Graph';
 import Program, { ProgramManager } from './components/Program';
 import Warning from './components/Warning';
-import { load } from './scripts/saving';
+// import { load } from './scripts/saving';
 
 const App: Component = () => {
 	const [instant, setInstant] = createSignal(window.localStorage.getItem('instant') == 'true');
@@ -19,15 +19,14 @@ const App: Component = () => {
 
 	const [warn, setWarn] = createSignal('');
 	const [program, setProgram] = createSignal<ProgramManager>();
-	const [noedit, setNoedit] = createSignal(true);
 
-	if (load()) {
-		const l = load();
-		const [s0, _1] = createSignal(l.s0);
-		const [sf, _2] = createSignal(l.sf);
-		const pgm = new ProgramManager(l.code, s0, sf);
-		setProgram(pgm);
-	}
+	// if (load()) {
+	// 	const l = load();
+	// 	const [s0, _1] = createSignal(l.s0);
+	// 	const [sf, _2] = createSignal(l.sf);
+	// 	const pgm = new ProgramManager(l.code, s0, sf);
+	// 	setProgram(pgm);
+	// }
 
 	const [output, setOutput] = createSignal<{
 		state: string;
