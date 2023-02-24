@@ -10,7 +10,7 @@
 	},
 	"license": "MIT",
 	"devDependencies": {
-		"@types/btoa": "^1.2.3",
+		"@types/color": "^3.0.3",
 		"@types/d3-graphviz": "^2.6.7",
 		"autoprefixer": "^10.4.13",
 		"postcss": "^8.4.21",
@@ -21,10 +21,8 @@
 	},
 	"dependencies": {
 		"@fortawesome/free-solid-svg-icons": "^6.3.0",
-		"@hpcc-js/wasm": "^2.8.0",
 		"buffer": "^6.0.3",
-		"colortranslator": "^1.10.2",
-		"d3": "^7.8.2",
+		"color": "^4.2.3",
 		"d3-graphviz": "^5.0.2",
 		"daisyui": "^2.50.1",
 		"map2": "^1.1.2",

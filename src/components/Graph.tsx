@@ -1,30 +1,14 @@
-import { ColorTranslator } from 'colortranslator';
-import { Component, createEffect, onCleanup, onMount } from 'solid-js';
-import { getCSSVar } from '../scripts/utils';
-import { ProgramManager } from './Program';
+import { Component, createEffect, onMount } from 'solid-js';
+import { graphviz } from 'd3-graphviz'
 
 import './Graph.css';
+import { graph } from '../scripts/program';
 
-const Graph: Component<{ program: ProgramManager; colored: string[] }> = (props) => {
-	createEffect(() => {
-		props.program.colored = props.colored;
+const Graph: Component = () => {
 
-		const b = new ColorTranslator(
-			getComputedStyle(document.querySelector('html')).getPropertyValue('background-color')
-		).HEX;
-		const a = new ColorTranslator(`hsl(${getCSSVar('bc')})`).HEX;
-
-		d3.select('#graph').graphviz().height('100%').fit(true).scale(1).zoom(false)
-			.renderDot(`digraph finite_state_machine {
-            fontname="Helvetica,Arial,sans-serif"
-            bgcolor="${b}"
-            node [fontname="Helvetica,Arial,sans-serif" fontcolor="${a}" color="${a}"]
-            edge [fontname="Helvetica,Arial,sans-serif" fontcolor="${a}" color="${a}"]
-            rankdir=LR;
-            node [shape = circle width=0.5];
-            ${props.program.getGraphData()}
-        }`);
-	});
+	createEffect(async () => {
+		graphviz('#graph').fit(true).scale(1).zoom(false).renderDot(graph());
+	})
 
 	return (
 		<div
@@ -32,7 +16,6 @@ const Graph: Component<{ program: ProgramManager; colored: string[] }> = (props)
 			style="text-align: center;"
 			class="w-full"
 			onClick={(e) => {
-				console.log(e);
 				e.preventDefault();
 			}}
 		></div>

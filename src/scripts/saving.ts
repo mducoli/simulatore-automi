@@ -8,7 +8,7 @@ export function save(code: string, s0: string, sf: string) {
 		sf
 	};
 
-	return Buffer.from(JSON.stringify(json)).toString('base64');
+	location.hash = Buffer.from(JSON.stringify(json)).toString('base64');
 }
 
 export function load(code?: Setter<string>, s0?: Setter<string>, sf?: Setter<string>) {

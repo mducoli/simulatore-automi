@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
 
-const Output: Component<{ value: string }> = (props) => {
+const Output: Component<{ value?: string }> = (props) => {
 	return (
 		<div class="form-control">
 			<label class="label">
