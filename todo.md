@@ -1,0 +1,4 @@
+- parsing error messages
+- code highlight
+- default behaviour for invalid input
+- add linter
