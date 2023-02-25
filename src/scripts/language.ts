@@ -7,13 +7,10 @@ import { linter as _linter, Diagnostic } from "@codemirror/lint"
 export const parser: StreamParser<string> = {
     token: (stream, state) => {
 
-        if (stream.column() == 0) {
-            // full line comment
-            if (stream.match(/^\s*#.*$/)) {
-                stream.skipToEnd()
-                return "lineComment"
-            };
-        }
+        if (stream.match("#")) {
+            stream.skipToEnd()
+            return "comment"
+        };
 
         if (stream.match(",")) {
             return "punctuation"
@@ -35,7 +32,7 @@ export const parser: StreamParser<string> = {
 
 export const style = HighlightStyle.define([
     { tag: tags.invalid, color: "#ff0000", },
-    { tag: tags.lineComment, color: "#6a9955" },
+    { tag: tags.comment, color: "#6a9955" },
     { tag: tags.punctuation, color: "#d4d4d4" },
     { tag: tags.string, color: "#ce9178" },
     { tag: tags.keyword, color: "#569cd6" }
@@ -58,25 +55,32 @@ export const completition = (ctx: CompletionContext) => {
 export const linter = _linter(view => {
     let diagnostics: Diagnostic[] = []
 
-    let chs = 0
+    const lineAtIndex = (line: number) => {
+        for (let i = 0; i < view.state.doc.length; i++) {
+            const ll = view.state.doc.lineAt(i)
+            if (ll.number == line) return ll
+        }
+        return null
+    }
+
     for (let [i, line] of view.state.doc.toJSON().entries()) {
 
         line = line.replace(/\s+/g, ' ').trim()
-        if (line == '' || line.startsWith('#')) {
-            chs += line.length + 1
+        line = line.split("#")[0]
+        if (line == '') {
             continue
         }
 
-        if (!line.match(regex.line)) {
+        const ll = lineAtIndex(i + 1)
+
+        if (ll && !line.match(regex.line)) {
             diagnostics.push({
-                from: chs,
-                to: chs + line.length,
+                from: ll.from,
+                to: ll.to,
                 severity: "error",
                 message: "Sintassi errata"
             })
         }
-
-        chs += line.length + 1
     }
 
     return diagnostics
