@@ -1,6 +1,7 @@
 import Color from "color";
 import Map2 from "map2";
 import { createSignal } from "solid-js";
+import { regex_line } from "./regex";
 import { load } from "./saving";
 import { bg_color, getCSSVar } from "./utils";
 
@@ -16,7 +17,9 @@ const [errLines, setErrLines] = createSignal<number[]>([])
 
 export { input, setInput, output, graph, code, setCode, s0, setS0, sf, setSf, errLines, coloured }
 
-const map: Map2<string, string, [string, string]> = new Map2()
+const graph_map: Map2<string, string, [string, string]> = new Map2()
+const program_map: Map2<string, string, [string, string]> = new Map2()
+
 export const possible_inputs: Set<string> = new Set();
 
 let tCode: string
@@ -36,27 +39,32 @@ export const update = () => {
 
 const parse = () => {
     let errLines: number[] = []
-    map.clear()
+    graph_map.clear()
+    program_map.clear()
     possible_inputs.clear()
 
-    for (const [i, line] of code().split('\n').entries()) {
-        if (line.trim() == '') {
+    for (let [i, line] of code().split('\n').entries()) {
+        line = line.replace(/\s+/g, ' ').trim()
+        if (line == '') {
             continue
         }
 
         if (
-            (line.match(/->/g) || []).length > 1 ||
-            !line.match(/^(\s+)?\S+\s\S(\s+)?->(\s+)?\S+\s\S+(\s+)?$/)
+            !line.match(regex_line)
         ) {
             errLines.push(i + 1);
             continue;
         }
+
         const p = line.split('->').map((v) => v.trim());
         const a = p[0].split(' ');
         const b = p[1].split(' ');
 
-        map.set(a[0], a[1], [b[0], b[1]]);
-        possible_inputs.add(a[1]);
+        graph_map.set(a[0], a[1], [b[0], b[1]]);
+        for (const inp of a[1].split(',')) {
+            program_map.set(a[0], inp, [b[0], b[1]]);
+            possible_inputs.add(inp)
+        }
     }
 
     setErrLines(errLines)
@@ -71,8 +79,8 @@ const compile_graph = () => {
         res += `node [shape = doublecircle]; "${sf()}";\n`;
     }
     res += 'node [shape = circle];\n';
-    for (const [S1, i, [S2, o]] of map.entries()) {
-        res += `"${S1}" -> "${S2}" [label = "${i}/${o}"];\n`;
+    for (const [S1, i, [S2, o]] of graph_map.entries()) {
+        res += `"${S1}" -> "${S2}" [label = "${o ? i + "/" + o : i}"];\n`;
     }
     if (coloured()) {
         res += `"${coloured()}" [color="${primary_color}"]\n`;
@@ -102,13 +110,13 @@ const execute = () => {
             continue;
         }
 
-        if (!map.has(state, c)) {
+        if (!program_map.has(state, c)) {
             setColoured('')
             setOutput('')
             return
         }
 
-        const [s, o] = map.get(state, c);
+        const [s, o] = program_map.get(state, c);
         state = s;
         output = o;
     }
