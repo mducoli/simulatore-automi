@@ -38,6 +38,15 @@ export const style = HighlightStyle.define([
     { tag: tags.keyword, color: "#569cd6" }
 ])
 
+const a = [1, 2, "██", () => { }] // █
+export const style_light = HighlightStyle.define([
+    { tag: tags.invalid, color: "#ff0000", },
+    { tag: tags.comment, color: "#008000" },
+    { tag: tags.punctuation, color: "#000000" },
+    { tag: tags.string, color: "#a31515" },
+    { tag: tags.keyword, color: "#0000ff" }
+])
+
 export const completition = (ctx: CompletionContext) => {
     let word = ctx.matchBefore(/\w*/)
     if (!word) return null

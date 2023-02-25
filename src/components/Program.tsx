@@ -7,7 +7,7 @@ import { basicSetup, EditorView } from 'codemirror'
 import { EditorState } from '@codemirror/state'
 import { isDarkTheme } from '../scripts/utils'
 import { StreamLanguage, syntaxHighlighting } from '@codemirror/language'
-import { linter, parser, style } from '../scripts/language'
+import { linter, parser, style, style_light } from '../scripts/language'
 
 const Program: Component = () => {
 	let loop: number
@@ -36,7 +36,7 @@ const Program: Component = () => {
 				EditorState.readOnly.of(new URLSearchParams(window.location.search).has('disabled')),
 				EditorView.darkTheme.of(isDarkTheme()),
 				StreamLanguage.define(parser),
-				syntaxHighlighting(style),
+				syntaxHighlighting(isDarkTheme() ? style : style_light),
 				linter
 			],
 			parent: document.getElementById('code')!
