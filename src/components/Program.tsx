@@ -107,7 +107,7 @@ const Program: Component = () => {
 				<div class="mt-9 flex gap-2">
 					<div class="my-auto">{errLines().length > 0 && <Fa icon={faCircleXmark} />}</div>
 					<span class="my-auto">
-						{errLines().length > 0 ? 'Error parsing line(s): ' + errLines().join(' ') : ''}
+						{errLines().length > 0 ? (errLines().length == 1 ? 'Errore alla linea ' + errLines().join(', ') : 'Errori alle linee ' + errLines().join(', ')) : ''}
 					</span>
 				</div>
 

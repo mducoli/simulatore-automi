@@ -1,2 +1,3 @@
 - default behaviour for invalid input
 - reduce graph lagg
+- comment keybind CTRL + /
