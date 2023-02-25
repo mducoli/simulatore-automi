@@ -1,6 +1,8 @@
+import Fa from 'solid-fa'
 import { Component, onCleanup, onMount } from 'solid-js'
-import { code, s0, setCode, setS0, setSf, sf, update } from '../scripts/program'
+import { code, errLines, s0, setCode, setS0, setSf, sf, update } from '../scripts/program'
 import { save } from '../scripts/saving'
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 
 const Program: Component = () => {
 	let loop: number
@@ -68,6 +70,11 @@ const Program: Component = () => {
 						}}
 					/>
 				</div>
+				<div class='mt-9 flex gap-2'>
+					<div class='my-auto'>{errLines().length > 0 && <Fa icon={faCircleXmark} />}</div>
+					<span class='my-auto'>{errLines().length > 0 ? "Error parsing line(s): " + errLines().join(' ') : ""}</span>
+				</div>
+
 				{!new URLSearchParams(window.location.search).has('disabled') && (
 					<button
 						class="btn-primary btn mt-9 ml-auto"

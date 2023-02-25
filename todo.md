@@ -1,5 +1,4 @@
-- parsing error messages
-- code highlight
+- code highlight and line indexes
 - default behaviour for invalid input
 - add linter
 - reduce graph lagg
