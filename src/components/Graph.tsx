@@ -1,4 +1,4 @@
-import { Component, createEffect, onMount } from 'solid-js'
+import { Component, createEffect } from 'solid-js'
 import { graphviz } from 'd3-graphviz'
 
 import './Graph.css'

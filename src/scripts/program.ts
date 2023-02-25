@@ -45,7 +45,7 @@ const parse = () => {
 
 	for (let [i, line] of code().split('\n').entries()) {
 		line = line.replace(/\s+/g, ' ').trim()
-		if (line == '') {
+		if (line == '' || line.startsWith('#')) {
 			continue
 		}
 

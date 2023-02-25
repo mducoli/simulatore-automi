@@ -1,4 +1,4 @@
-import { Component, onMount } from 'solid-js'
+import { Component } from 'solid-js'
 import Graph from './components/Graph'
 import Input from './components/Input'
 import Output from './components/Output'
