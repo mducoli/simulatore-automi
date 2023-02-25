@@ -6,6 +6,8 @@ import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { basicSetup, EditorView } from 'codemirror'
 import { EditorState } from '@codemirror/state'
 import { isDarkTheme } from '../scripts/utils'
+import { StreamLanguage, syntaxHighlighting } from '@codemirror/language'
+import { linter, parser, style } from '../scripts/language'
 
 const Program: Component = () => {
 	let loop: number
@@ -32,7 +34,10 @@ const Program: Component = () => {
 					'.cm-scroller': { overflow: 'auto' }
 				}),
 				EditorState.readOnly.of(new URLSearchParams(window.location.search).has('disabled')),
-				EditorView.darkTheme.of(isDarkTheme())
+				EditorView.darkTheme.of(isDarkTheme()),
+				StreamLanguage.define(parser),
+				syntaxHighlighting(style),
+				linter
 			],
 			parent: document.getElementById('code')!
 		})

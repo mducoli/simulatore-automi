@@ -1,7 +1,7 @@
 import Color from 'color'
 import Map2 from 'map2'
 import { createSignal } from 'solid-js'
-import { regex_line } from './regex'
+import { regex } from './regex'
 import { load } from './saving'
 import { getCSSVar } from './utils'
 
@@ -49,7 +49,7 @@ export const parse = () => {
 			continue
 		}
 
-		if (!line.match(regex_line)) {
+		if (!line.match(regex.line)) {
 			errLines.push(i + 1)
 			continue
 		}
