@@ -1,9 +1,8 @@
-import { Component, onCleanup, onMount } from 'solid-js';
-import { code, s0, setCode, setS0, setSf, sf, update } from '../scripts/program';
-import { save } from '../scripts/saving';
+import { Component, onCleanup, onMount } from 'solid-js'
+import { code, s0, setCode, setS0, setSf, sf, update } from '../scripts/program'
+import { save } from '../scripts/saving'
 
 const Program: Component = () => {
-
 	let loop: number
 
 	onMount(() => {
@@ -34,7 +33,7 @@ const Program: Component = () => {
 				placeholder="S0 1 -> S1 F"
 				disabled={new URLSearchParams(window.location.search).has('disabled')}
 				value={code()}
-				onInput={e => {
+				onInput={(e) => {
 					setCode(e.currentTarget.value)
 				}}
 			></textarea>
@@ -49,7 +48,7 @@ const Program: Component = () => {
 						class="input-bordered input w-full max-w-xs"
 						disabled={new URLSearchParams(window.location.search).has('disabled')}
 						value={s0()}
-						onInput={e => {
+						onInput={(e) => {
 							setS0(e.currentTarget.value)
 						}}
 					/>
@@ -64,7 +63,7 @@ const Program: Component = () => {
 						class="input-bordered input w-full max-w-xs"
 						disabled={new URLSearchParams(window.location.search).has('disabled')}
 						value={sf()}
-						onInput={e => {
+						onInput={(e) => {
 							setSf(e.currentTarget.value)
 						}}
 					/>
@@ -81,7 +80,7 @@ const Program: Component = () => {
 				)}
 			</div>
 		</div>
-	);
-};
+	)
+}
 
-export default Program;
+export default Program

@@ -1,13 +1,11 @@
-import { Component, onMount } from "solid-js";
-import Graph from "./components/Graph";
-import Input from "./components/Input";
-import Output from "./components/Output";
-import Program from "./components/Program";
-import { coloured, output } from "./scripts/program";
-
+import { Component, onMount } from 'solid-js'
+import Graph from './components/Graph'
+import Input from './components/Input'
+import Output from './components/Output'
+import Program from './components/Program'
+import { coloured, output } from './scripts/program'
 
 const App: Component = () => {
-
 	return (
 		<div class="container mx-auto my-3">
 			<div class="flex gap-3">
@@ -21,12 +19,12 @@ const App: Component = () => {
 				</div>
 			</div>
 
-			<div class="flex flex-wrap gap-3 mt-12">
+			<div class="mt-12 flex flex-wrap gap-3">
 				<Graph />
 				<Program />
 			</div>
 		</div>
-	);
-};
+	)
+}
 
-export default App;
+export default App

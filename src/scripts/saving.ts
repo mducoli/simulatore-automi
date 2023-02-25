@@ -1,29 +1,29 @@
-import { Setter } from 'solid-js';
-import { Buffer } from 'buffer';
+import { Setter } from 'solid-js'
+import { Buffer } from 'buffer'
 
 export function save(code: string, s0: string, sf: string) {
 	const json = {
 		code,
 		s0,
 		sf
-	};
+	}
 
-	location.hash = Buffer.from(JSON.stringify(json)).toString('base64');
+	location.hash = Buffer.from(JSON.stringify(json)).toString('base64')
 }
 
 export function load(code?: Setter<string>, s0?: Setter<string>, sf?: Setter<string>) {
 	try {
-		const json = JSON.parse(Buffer.from(window.location.hash, 'base64').toString());
+		const json = JSON.parse(Buffer.from(window.location.hash, 'base64').toString())
 		if (json.code == undefined || json.s0 == undefined || json.sf == undefined) {
-			console.error('Error loading data');
-			return null;
+			console.error('Error loading data')
+			return null
 		}
 
-		code && code(json.code);
-		s0 && s0(json.s0);
-		sf && sf(json.sf);
-		return json as { code: string; s0: string; sf: string };
+		code && code(json.code)
+		s0 && s0(json.s0)
+		sf && sf(json.sf)
+		return json as { code: string; s0: string; sf: string }
 	} catch {
-		return null;
+		return null
 	}
 }

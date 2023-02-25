@@ -1,4 +1,4 @@
-import { Component } from 'solid-js';
+import { Component } from 'solid-js'
 
 const Output: Component<{ value?: string }> = (props) => {
 	return (
@@ -8,7 +8,7 @@ const Output: Component<{ value?: string }> = (props) => {
 			</label>
 			<div class="card grid place-items-center rounded-lg bg-base-300 p-3">{props.value}</div>
 		</div>
-	);
-};
+	)
+}
 
-export default Output;
+export default Output
