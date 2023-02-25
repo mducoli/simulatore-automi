@@ -3,9 +3,12 @@ import { Component, onCleanup, onMount } from 'solid-js'
 import { code, errLines, s0, setCode, setS0, setSf, sf, update } from '../scripts/program'
 import { save } from '../scripts/saving'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
+import { basicSetup, EditorView } from "codemirror"
 
 const Program: Component = () => {
 	let loop: number
+	let editor: EditorView
+	let setEditorValue: (t: string) => void
 
 	onMount(() => {
 		let tCode: string, tS0: string, sSf: string
@@ -19,26 +22,43 @@ const Program: Component = () => {
 				update()
 			}
 		}, 500)
+
+		editor = new EditorView({
+			doc: code(),
+			extensions: [
+				basicSetup,
+				EditorView.updateListener.of((v) => {
+					if (v.docChanged) {
+						console.log('aa')
+						setCode(v.state.doc.toJSON().join('\n'))
+					}
+				}),
+				EditorView.theme({
+					'&': { maxHeight: '500px' },
+					'.cm-gutter,.cm-content': { minHeight: '500px' },
+					'.cm-scroller': { overflow: 'auto' },
+				})
+			],
+			parent: document.getElementById("code")!,
+		})
+
+		// setEditorValue = (t: string) => {
+		// 	const changes = [{ from: 0, to: editor.state.doc.length, insert: t }]
+		// 	editor.dispatch({ changes })
+		// }
 	})
 
 	onCleanup(() => {
+		editor.destroy()
 		clearInterval(loop)
 	})
 
 	return (
-		<div class="form-control flex-grow">
+		<div class="form-control flex-grow w-full">
 			<label class="label">
 				<span class="label-text">Programma</span>
 			</label>
-			<textarea
-				class="textarea-bordered textarea h-96 w-full"
-				placeholder="S0 1 -> S1 F"
-				disabled={new URLSearchParams(window.location.search).has('disabled')}
-				value={code()}
-				onInput={(e) => {
-					setCode(e.currentTarget.value)
-				}}
-			></textarea>
+			<div id='code' />
 			<div class="flex w-full gap-3">
 				<div class="form-control w-full max-w-xs">
 					<label class="label">
