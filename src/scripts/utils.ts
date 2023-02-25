@@ -1,4 +1,5 @@
-import Color from 'color'
+import { createSignal } from 'solid-js'
+import { compile_graph } from './program'
 
 export function getCSSVar(name: string) {
 	const root = document.querySelector(':root')!
@@ -6,6 +7,12 @@ export function getCSSVar(name: string) {
 	return style.getPropertyValue('--' + name)
 }
 
-export const bg_color = new Color(
-	getComputedStyle(document.querySelector('html')!).getPropertyValue('background-color')
+const [isDarkTheme, setIsDarkTheme] = createSignal(
+	window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 )
+export { isDarkTheme }
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+	setIsDarkTheme(event.matches)
+	compile_graph()
+})

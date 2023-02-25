@@ -3,25 +3,18 @@ import { Component, onCleanup, onMount } from 'solid-js'
 import { code, errLines, s0, setCode, setS0, setSf, sf, update } from '../scripts/program'
 import { save } from '../scripts/saving'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
-import { basicSetup, EditorView } from "codemirror"
+import { basicSetup, EditorView } from 'codemirror'
+import { EditorState } from '@codemirror/state'
+import { isDarkTheme } from '../scripts/utils'
 
 const Program: Component = () => {
 	let loop: number
 	let editor: EditorView
-	let setEditorValue: (t: string) => void
 
-	onMount(() => {
-		let tCode: string, tS0: string, sSf: string
-
-		loop = setInterval(() => {
-			if (code() != tCode || s0() != tS0 || sf() != sSf) {
-				console.log('updating...')
-				tCode = code()
-				tS0 = s0()
-				sSf = sf()
-				update()
-			}
-		}, 500)
+	const renderEditor = () => {
+		if (editor) {
+			editor.destroy()
+		}
 
 		editor = new EditorView({
 			doc: code(),
@@ -36,29 +29,45 @@ const Program: Component = () => {
 				EditorView.theme({
 					'&': { maxHeight: '500px' },
 					'.cm-gutter,.cm-content': { minHeight: '500px' },
-					'.cm-scroller': { overflow: 'auto' },
-				})
+					'.cm-scroller': { overflow: 'auto' }
+				}),
+				EditorState.readOnly.of(new URLSearchParams(window.location.search).has('disabled')),
+				EditorView.darkTheme.of(isDarkTheme())
 			],
-			parent: document.getElementById("code")!,
+			parent: document.getElementById('code')!
 		})
+	}
 
-		// setEditorValue = (t: string) => {
-		// 	const changes = [{ from: 0, to: editor.state.doc.length, insert: t }]
-		// 	editor.dispatch({ changes })
-		// }
+	onMount(() => {
+		let tCode: string, tS0: string, sSf: string
+
+		loop = setInterval(() => {
+			if (code() != tCode || s0() != tS0 || sf() != sSf) {
+				console.log('updating...')
+				tCode = code()
+				tS0 = s0()
+				sSf = sf()
+				update()
+			}
+		}, 500)
+
+		renderEditor()
+
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderEditor)
 	})
 
 	onCleanup(() => {
 		editor.destroy()
 		clearInterval(loop)
+		window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', renderEditor)
 	})
 
 	return (
-		<div class="form-control flex-grow w-full">
+		<div class="form-control w-full flex-grow">
 			<label class="label">
 				<span class="label-text">Programma</span>
 			</label>
-			<div id='code' />
+			<div id="code" class="text-base" />
 			<div class="flex w-full gap-3">
 				<div class="form-control w-full max-w-xs">
 					<label class="label">
@@ -90,9 +99,11 @@ const Program: Component = () => {
 						}}
 					/>
 				</div>
-				<div class='mt-9 flex gap-2'>
-					<div class='my-auto'>{errLines().length > 0 && <Fa icon={faCircleXmark} />}</div>
-					<span class='my-auto'>{errLines().length > 0 ? "Error parsing line(s): " + errLines().join(' ') : ""}</span>
+				<div class="mt-9 flex gap-2">
+					<div class="my-auto">{errLines().length > 0 && <Fa icon={faCircleXmark} />}</div>
+					<span class="my-auto">
+						{errLines().length > 0 ? 'Error parsing line(s): ' + errLines().join(' ') : ''}
+					</span>
 				</div>
 
 				{!new URLSearchParams(window.location.search).has('disabled') && (

@@ -1,11 +1,11 @@
 import { Component, createEffect } from 'solid-js'
 import { graphviz } from 'd3-graphviz'
-
-import './Graph.css'
 import { graph } from '../scripts/program'
 
+import './Graph.css'
+
 const Graph: Component = () => {
-	createEffect(async () => {
+	createEffect(() => {
 		graphviz('#graph').fit(true).scale(1).zoom(false).renderDot(graph())
 	})
 
@@ -13,7 +13,7 @@ const Graph: Component = () => {
 		<div
 			id="graph"
 			style="text-align: center;"
-			class="w-full"
+			class="flex w-full"
 			onClick={(e) => {
 				e.preventDefault()
 			}}

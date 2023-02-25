@@ -3,7 +3,7 @@ import Map2 from 'map2'
 import { createSignal } from 'solid-js'
 import { regex_line } from './regex'
 import { load } from './saving'
-import { bg_color, getCSSVar } from './utils'
+import { getCSSVar } from './utils'
 
 const [input, setInput] = createSignal('')
 const [output, setOutput] = createSignal('')
@@ -37,7 +37,7 @@ export const update = () => {
 	compile_graph()
 }
 
-const parse = () => {
+export const parse = () => {
 	let errLines: number[] = []
 	graph_map.clear()
 	program_map.clear()
@@ -68,9 +68,12 @@ const parse = () => {
 	setErrLines(errLines)
 }
 
-const compile_graph = () => {
+export const compile_graph = () => {
 	const base_color = new Color(`hsl(${getCSSVar('bc')})`).hex()
 	const primary_color = new Color(`hsl(${getCSSVar('p')})`).hex()
+	const bg_color = new Color(
+		getComputedStyle(document.querySelector('html')!).getPropertyValue('background-color')
+	).hex()
 
 	let res = ''
 	if (sf() != '') {
@@ -86,7 +89,7 @@ const compile_graph = () => {
 
 	const graph = `digraph finite_state_machine {
             fontname="Helvetica"
-            bgcolor="${bg_color.hex()}"
+            bgcolor="${bg_color}"
             node [fontname="Helvetica" fontcolor="${base_color}" color="${base_color}"]
             edge [fontname="Helvetica" fontcolor="${base_color}" color="${base_color}"]
             rankdir=LR;
@@ -97,7 +100,7 @@ const compile_graph = () => {
 	setGraph(graph)
 }
 
-const execute = () => {
+export const execute = () => {
 	let state = s0()
 	let output = ''
 

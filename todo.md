@@ -1,4 +1,4 @@
-- code highlight and line indexes
+- code highlight
 - default behaviour for invalid input
 - add linter
 - reduce graph lagg
