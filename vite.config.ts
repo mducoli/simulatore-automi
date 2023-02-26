@@ -12,4 +12,7 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ['@codemirror/state'],
 	},
+	esbuild: {
+		drop: ['console', 'debugger'],
+	},
 })
