@@ -64,14 +64,6 @@ export const completition = (ctx: CompletionContext) => {
 export const linter = _linter(view => {
     let diagnostics: Diagnostic[] = []
 
-    const lineAtIndex = (line: number) => {
-        for (let i = 0; i < view.state.doc.length; i++) {
-            const ll = view.state.doc.lineAt(i)
-            if (ll.number == line) return ll
-        }
-        return null
-    }
-
     for (let [i, line] of view.state.doc.toJSON().entries()) {
 
         line = line.replace(/\s+/g, ' ').trim()
@@ -80,9 +72,9 @@ export const linter = _linter(view => {
             continue
         }
 
-        const ll = lineAtIndex(i + 1)
+        const ll = view.state.doc.line(i + 1)
 
-        if (ll && !line.match(regex.line)) {
+        if (!line.match(regex.line)) {
             diagnostics.push({
                 from: ll.from,
                 to: ll.to,
