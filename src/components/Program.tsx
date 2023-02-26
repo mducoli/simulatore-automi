@@ -7,7 +7,7 @@ import { basicSetup, EditorView } from 'codemirror'
 import { EditorState } from '@codemirror/state'
 import { isDarkTheme } from '../scripts/utils'
 import { StreamLanguage, syntaxHighlighting } from '@codemirror/language'
-import { linter, parser, style, style_light } from '../scripts/language'
+import { linter, parser, style, style_light, theme, theme_light } from '../scripts/language'
 
 const Program: Component = () => {
 	let loop: number
@@ -24,7 +24,6 @@ const Program: Component = () => {
 				basicSetup,
 				EditorView.updateListener.of((v) => {
 					if (v.docChanged) {
-						console.log('aa')
 						setCode(v.state.doc.toJSON().join('\n'))
 					}
 				}),
@@ -33,6 +32,7 @@ const Program: Component = () => {
 					'.cm-gutter,.cm-content': { minHeight: '500px' },
 					'.cm-scroller': { overflow: 'auto' }
 				}),
+				isDarkTheme() ? theme : theme_light,
 				EditorState.readOnly.of(new URLSearchParams(window.location.search).has('disabled')),
 				EditorView.darkTheme.of(isDarkTheme()),
 				StreamLanguage.define(parser),
@@ -41,6 +41,8 @@ const Program: Component = () => {
 			],
 			parent: document.getElementById('code')!
 		})
+
+
 	}
 
 	onMount(() => {
@@ -72,7 +74,7 @@ const Program: Component = () => {
 			<label class="label">
 				<span class="label-text">Programma</span>
 			</label>
-			<div id="code" class="text-base" />
+			<div id="code" class="text-base" style={!isDarkTheme() ? 'border: 1px solid #eeeeee' : ''} />
 			<div class="flex w-full gap-3">
 				<div class="form-control w-full max-w-xs">
 					<label class="label">

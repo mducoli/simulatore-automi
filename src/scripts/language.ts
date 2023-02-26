@@ -3,6 +3,7 @@ import { tags } from "@lezer/highlight"
 import { regex } from './regex';
 import { CompletionContext } from "@codemirror/autocomplete"
 import { linter as _linter, Diagnostic } from "@codemirror/lint"
+import { EditorView } from 'codemirror';
 
 export const parser: StreamParser<string> = {
     token: (stream, state) => {
@@ -38,7 +39,6 @@ export const style = HighlightStyle.define([
     { tag: tags.keyword, color: "#569cd6" }
 ])
 
-const a = [1, 2, "██", () => { }] // █
 export const style_light = HighlightStyle.define([
     { tag: tags.invalid, color: "#ff0000", },
     { tag: tags.comment, color: "#008000" },
@@ -85,4 +85,18 @@ export const linter = _linter(view => {
     }
 
     return diagnostics
+})
+
+export const theme = EditorView.theme({
+    '&': { backgroundColor: '#1e1e1e' },
+    '.cm-lintRange-error': { backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="3">%3Cpath%20d%3D%22m0%202.5%20l2%20-1.5%20l1%200%20l2%201.5%20l1%200%22%20stroke%3D%22%23ed4b4b%22%20fill%3D%22none%22%20stroke-width%3D%22.7%22%2F%3E</svg>') !important` },
+    '.cm-cursor': { borderLeft: "2px solid #aeafad" },
+    '.cm-activeLine': { background: 'rgba(0,0,0,0)', "box-shadow": 'inset 0px -2px 0px #282828, inset 0px 2px 0px #282828' }
+})
+
+export const theme_light = EditorView.theme({
+    '&': { backgroundColor: '#ffffff' },
+    '.cm-lintRange-error': { backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="3">%3Cpath%20d%3D%22m0%202.5%20l2%20-1.5%20l1%200%20l2%201.5%20l1%200%22%20stroke%3D%22%23e51400%22%20fill%3D%22none%22%20stroke-width%3D%22.7%22%2F%3E</svg>') !important` },
+    '.cm-cursor': { borderLeft: "2px solid #000000" },
+    '.cm-activeLine': { background: 'rgba(0,0,0,0)', "box-shadow": 'inset 0px -2px 0px #eeeeee, inset 0px 2px 0px #eeeeee' }
 })
