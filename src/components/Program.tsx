@@ -7,16 +7,25 @@ import { basicSetup, EditorView } from 'codemirror'
 import { EditorState } from '@codemirror/state'
 import { isDarkTheme } from '../scripts/utils'
 import { StreamLanguage, syntaxHighlighting } from '@codemirror/language'
-import { linter, parser, style, style_light, theme, theme_light } from '../scripts/language'
+import {
+	commentLines,
+	linter,
+	parser,
+	style,
+	style_light,
+	theme,
+	theme_light
+} from '../scripts/language'
+import { keymap } from '@codemirror/view'
 
 const Program: Component = () => {
 	let loop: number
 	let editor: EditorView
 
 	const renderEditor = () => {
-		if (editor) {
+		try {
 			editor.destroy()
-		}
+		} catch {}
 
 		editor = new EditorView({
 			doc: code(),
@@ -27,22 +36,21 @@ const Program: Component = () => {
 						setCode(v.state.doc.toJSON().join('\n'))
 					}
 				}),
+				keymap.of([{ key: 'CTRL-/', run: commentLines }]),
+				EditorState.readOnly.of(new URLSearchParams(window.location.search).has('disabled')),
+				StreamLanguage.define(parser),
+				linter,
 				EditorView.theme({
 					'&': { maxHeight: '500px' },
 					'.cm-gutter,.cm-content': { minHeight: '500px' },
 					'.cm-scroller': { overflow: 'auto' }
 				}),
 				isDarkTheme() ? theme : theme_light,
-				EditorState.readOnly.of(new URLSearchParams(window.location.search).has('disabled')),
 				EditorView.darkTheme.of(isDarkTheme()),
-				StreamLanguage.define(parser),
-				syntaxHighlighting(isDarkTheme() ? style : style_light),
-				linter
+				syntaxHighlighting(isDarkTheme() ? style : style_light)
 			],
 			parent: document.getElementById('code')!
 		})
-
-
 	}
 
 	onMount(() => {
@@ -109,7 +117,11 @@ const Program: Component = () => {
 				<div class="mt-9 flex gap-2">
 					<div class="my-auto">{errLines().length > 0 && <Fa icon={faCircleXmark} />}</div>
 					<span class="my-auto">
-						{errLines().length > 0 ? (errLines().length == 1 ? 'Errore alla linea ' + errLines().join(', ') : 'Errori alle linee ' + errLines().join(', ')) : ''}
+						{errLines().length > 0
+							? errLines().length == 1
+								? 'Errore alla linea ' + errLines().join(', ')
+								: 'Errori alle linee ' + errLines().join(', ')
+							: ''}
 					</span>
 				</div>
 

@@ -1,9 +1,10 @@
 import { StreamParser, StringStream, HighlightStyle } from '@codemirror/language'
 import { tags } from '@lezer/highlight'
 import { regex } from './regex'
-import { CompletionContext } from '@codemirror/autocomplete'
-import { linter as _linter, Diagnostic } from '@codemirror/lint'
+import { linter as create_linter, Diagnostic } from '@codemirror/lint'
 import { EditorView } from 'codemirror'
+import { Command } from '@codemirror/view'
+import { ChangeSpec } from '@codemirror/state'
 
 export const parser: StreamParser<string> = {
 	token: (stream, state) => {
@@ -62,7 +63,7 @@ export const style_light = HighlightStyle.define([
 // 	}
 // }
 
-export const linter = _linter((view) => {
+export const linter = create_linter((view) => {
 	let diagnostics: Diagnostic[] = []
 
 	for (let [i, line] of view.state.doc.toJSON().entries()) {
@@ -76,8 +77,8 @@ export const linter = _linter((view) => {
 
 		if (!line.match(regex.line)) {
 			diagnostics.push({
-				from: ll.from,
-				to: ll.to,
+				from: ll.from + ll.text.search(/\S/),
+				to: ll.from + ll.text.trimEnd().length,
 				severity: 'error',
 				message: 'Sintassi errata'
 			})
@@ -110,3 +111,37 @@ export const theme_light = EditorView.theme({
 		'box-shadow': 'inset 0px -2px 0px #eeeeee, inset 0px 2px 0px #eeeeee'
 	}
 })
+
+export const commentLines: Command = (view) => {
+	const fist_line = view.state.doc.lineAt(view.state.selection.main.from).number
+	const last_line = view.state.doc.lineAt(view.state.selection.main.to).number
+
+	let changes: ChangeSpec[] = []
+
+	for (let i = fist_line; i <= last_line; i++) {
+		console.log(i)
+		changes = changes.concat(commentLineAt(view, i))
+	}
+
+	view.dispatch({ changes })
+
+	return true
+}
+
+const commentLineAt = (view: EditorView, index: number): ChangeSpec[] => {
+	const line = view.state.doc.line(index)
+	let changes: ChangeSpec[] = []
+
+	if (line.text.trim().startsWith('#')) {
+		const from = line.from + line.text.indexOf('#')
+		const to = (line.text[from - line.from + 1] == ' ' ? from + 1 : from) + 1
+
+		changes.push({ from, to, insert: '' })
+	} else {
+		const idx = line.from + line.text.search(/\S/)
+
+		changes.push({ from: idx, to: idx, insert: '# ' })
+	}
+
+	return changes
+}
