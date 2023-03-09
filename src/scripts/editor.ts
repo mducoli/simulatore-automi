@@ -78,7 +78,7 @@ export const linter = create_linter((view) => {
 		if (!line.match(regex.line)) {
 			diagnostics.push({
 				from: ll.from + ll.text.search(/\S/),
-				to: ll.from + ll.text.trimEnd().length,
+				to: ll.from + ll.text.split('#')[0].trimEnd().length,
 				severity: 'error',
 				message: 'Sintassi errata'
 			})
