@@ -10,9 +10,9 @@ export default defineConfig({
 		target: 'esnext'
 	},
 	optimizeDeps: {
-		exclude: ['@codemirror/state'],
+		exclude: ['@codemirror/state']
 	},
 	esbuild: {
-		drop: ['console', 'debugger'],
-	},
+		drop: ['console', 'debugger']
+	}
 })
