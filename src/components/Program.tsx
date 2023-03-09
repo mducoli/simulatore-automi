@@ -15,7 +15,7 @@ import {
 	style_light,
 	theme,
 	theme_light
-} from '../scripts/language'
+} from '../scripts/editor'
 import { keymap } from '@codemirror/view'
 
 const Program: Component = () => {
@@ -25,7 +25,7 @@ const Program: Component = () => {
 	const renderEditor = () => {
 		try {
 			editor.destroy()
-		} catch {}
+		} catch { }
 
 		editor = new EditorView({
 			doc: code(),
