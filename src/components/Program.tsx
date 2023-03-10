@@ -1,5 +1,5 @@
 import Fa from 'solid-fa'
-import { Component, onCleanup, onMount } from 'solid-js'
+import { Component, createEffect, onCleanup, onMount } from 'solid-js'
 import { code, errLines, s0, setCode, setS0, setSf, sf, update } from '../scripts/program'
 import { save } from '../scripts/saving'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
@@ -52,6 +52,16 @@ const Program: Component = () => {
 			parent: document.getElementById('code')!
 		})
 	}
+
+	createEffect(() => {
+		const _ = code()
+
+		if (!editor) return
+		if (code() == editor.state.doc.toJSON().join('\n')) return
+		editor.dispatch({
+			changes: { from: 0, to: editor.state.doc.length, insert: code() }
+		})
+	})
 
 	onMount(() => {
 		let tCode: string, tS0: string, sSf: string

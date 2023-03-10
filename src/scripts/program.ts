@@ -128,3 +128,9 @@ export const execute = () => {
 
 load(setCode, setS0, setSf)
 update()
+
+window.addEventListener('hashchange', () => {
+	load(setCode, setS0, setSf)
+	setInput('')
+	update()
+})

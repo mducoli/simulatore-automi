@@ -1,5 +1,5 @@
 import { Component } from 'solid-js'
-import { possible_inputs, setInput, update } from '../scripts/program'
+import { input, possible_inputs, setInput, update } from '../scripts/program'
 
 const Input: Component = () => {
 	return (
@@ -19,6 +19,7 @@ const Input: Component = () => {
 					setInput(e.currentTarget.value)
 					update()
 				}}
+				value={input()}
 			/>
 		</div>
 	)
